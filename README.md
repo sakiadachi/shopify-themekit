@@ -1,2 +1,2 @@
-# shopify-themekit
+# test-theme
  
