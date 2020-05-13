@@ -7,86 +7,10 @@
   <meta name="description" content="{{ page_description | escape }}">
   <link rel="canonical" href="{{ canonical_url }}">
   <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js'></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
-  <script>
-    const cartCount = {{ cart.item_count }};
-
-    document.querySelector("#AddToCartForm").addEventListener("submit", function(e){
-    if(!isValid){
-        e.preventDefault();    //stop form from submitting
-        console.log('Submitted!')
-        function addItem(form_id) {
-        event.preventDefault();
-        $.ajax({
-            type: 'POST', 
-            url: '/cart/add.js',
-            dataType: 'json', 
-            data: $('#'+form_id).serialize(),
-            success: addToCartOk,
-            error: addToCartFail
-          });
-      }
-    }
-});
-    $(document).ready(function(){   
-    {% if cart.item_count != 0 %}  
-    $('#cart-number').replaceWith("<a href="/cart" id="cart-number">View cart (" + cartCount + ")</a>");
-    {% endif %}
-
-    $('.modal--overlay').on('click', function(){
-      var overlay = $('.modal--overlay')
-      closeModal(overlay)
-    })
-});
-
-function addToCartOk(product) { 
-   cartCount++; 
-   $('.modal').html('<span class="close" id="close">✕</span>' + product.title + ' was added to the cart!'); 
-   $('#cart-number').replaceWith("<a href="/cart" id="cart-number">View cart (" + cartCount + ")</a>");
-   openModal();
-} 
-
-function addToCartFail(obj, status) { 
-    $('.modal').html('<span class="close" id="close">✕</span> The product you are trying to add is out of stock.'); 
-   openModal()
- } 
-// layout/theme.liquid
-//Modal Actions
-//center modal based on window size
-function centerModal(){
-   var modal = $('.modal.open');
-   var mWidth = modal.outerWidth()
-   var mHeight = modal.outerHeight();
-   var width = $(window).width();
-   var height = $(window).height();
-   if((width % 1) != 0){
-      width = Math.round(width)
-   }
-   if((height % 1) != 0){
-      height = Math.round(height)
-   }
-   var topPos = (height / 2) - (mHeight / 2);
-   var leftPos = (width / 2) - (mWidth / 2); 
-   modal.css({top: topPos, left:leftPos})
-}
-//open modal and overlay
-function openModal(){
-   $('.modal').removeClass('hidden').addClass('open');
-   $('.modal--overlay').removeClass('hidden').addClass('open');
-   $('body').css('overflow', 'hidden');
-   centerModal();
-}
-
-//close modal and overlay
-function closeModal(overlay){
-   $(overlay).addClass('hidden').removeClass('open');
-   $('.modal.open').addClass('hidden').removeClass('open');
-   $('body').css('overflow', 'auto');
-}
-  </script>
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+
   {{ content_for_header }} <!-- Header hook for plugins -->
   {{ 'application.scss.css' | asset_url | stylesheet_tag }}
   {{ 'application.js' | asset_url | script_tag }}

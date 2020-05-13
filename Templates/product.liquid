@@ -1,5 +1,17 @@
-<div class="modal hidden" id="download-modal"></div>
-<div class="modal--overlay hidden"></div>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+
+
+{{ 'theme.css' | asset_url | stylesheet_tag }}
+<div id="cartModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p>modal opened!</p>
+  </div>
+</div>
+
 
 {% assign current_variant = product.selected_or_first_available_variant %}
 {% assign featured_image = current_variant.featured_image | default: product.featured_image %}
@@ -9,8 +21,9 @@
     <img src="{{ image.src | img_url: 'compact' }}" alt="{{ image.alt | escape }}">
   </a>
 {% endfor %}
+
 <h1>{{ product.title }}</h1>
-<form enctype="multipart/form-data" id="AddToCartForm">
+<form enctype="multipart/form-data" id="addToCartForm" onSubmit="return false;">
   <select name="id" id="productSelect">
     {% for variant in product.variants %}
       {% if variant.available %}
@@ -27,6 +40,31 @@
   {{ current_variant.price | money }}
   <label for="Quantity">quantity</label>
   <input type="number" id="Quantity" name="quantity" value="1" min="1">
-  <button type="submit" name="add" id="AddToCart">Add to cart</button>
+  <button type="submit" name="add" id="addToCart" onSubmit="return false;" data-add-to-cart>Add to cart!!!</button>
 </form>
+
 <div>{{ product.description }}</div>
+
+<script type='text/javascript'>
+  // const cartCount = {{ cart.item_count }};
+  window.addEventListener('DOMContentLoaded', (event) => {
+    event.preventDefault();
+    const cartModal= document.getElementById("cartModal");
+    const span= document.getElementsByClassName("close")[0];
+
+    function openModal() {
+        event.preventDefault();
+        cartModal.style.display = "block";
+      }
+
+      function closeModal() {
+        cartModal.style.display = "none";
+      }
+
+      const btn = document.getElementById("btn");
+      btn.addEventListener('submit', openModal);
+
+      span.addEventListener('click', closeModal)
+  });
+
+</script>
