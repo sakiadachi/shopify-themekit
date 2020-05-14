@@ -1,24 +1,59 @@
-<script type='text/javascript'>
-  // const cartCount = {{ cart.item_count }};
+<script type='text/javascript' >
   window.addEventListener('DOMContentLoaded', (event) => {
-    event.preventDefault();
-    const cartModal= document.getElementById("cartModal");
-    const span= document.getElementsByClassName("close")[0];
+  event.preventDefault();
+  const cartModal= document.getElementById("cartModal");
+  const span= document.getElementsByClassName("close")[0];
+  const form = document.getElementById("addToCartForm");
+  const cartPopup = document.querySelector('cart-popup-wrapper');
+  cartPopup.classList.remove("cart-popup-wrapper");
 
-    function openModal(event) {
-        event.preventDefault();
-        cartModal.style.display = "block";
-        console.log('modal opened');
-      }
+  form.addEventListener('submit', openModal);
+  span.addEventListener('click', closeModal);
+  function closeModal(event) {
+    cartModal.style.display = "none";
+  }
+  function openModal(data){
+    cartPopup.style.display = "block";
+    console.log(data);
+  }
 
-      function closeModal() {
-        cartModal.style.display = "none";
-      }
-
-      const form = document.getElementById("addToCartForm");
-      form.addEventListener('submit', openModal);
-      span.addEventListener('click', closeModal);
+  
+  // async function addItem() {
+  //     await fetch('/add/cart',
+  //     {
+  //       method: 'POST',
+  //       headers: {'Content-Type': 'application/json'},
+  //       body: JSON.stringify()
+  //   })
+  //   .then(reponse => response.json())
+  //   .then(data => {
+  //     openModal(data);
+  //     closeModal();
+  //   })
+  //   .catch((error) => {
+  //     console.error('Error: ', error);
+  //   })
+  //   }
+  // function openModal(data){
+  //   cartPopup.style.display = "block";
+  //   console.log(data);
+  // }
   });
+
+//   var selectCallback = function(variant, selector){
+//     if(variant && variant.available){
+//         $('#add-to-cart').removeClass('disabled').removeAttr('disabled');
+//         // Enable the Add to Cart button
+//         $('.options .price').html('<strong>'+Shopify.formatMoney(variant.price, "{{shop.money_with_currency_format}}")+'</strong>');
+//         // Show price of the currently selected variant
+//     }
+//     else{
+//         $('#add-to-cart').addClass('disabled').attr('disabled', 'disabled');
+//         // Disable the Add to Cart button
+//         $('.options .price').text("Sold Out!");
+//         // Swap price with a 'Sold Out' message
+//     }
+// };
 </script>
 
 <div id="cartModal" class="modal">

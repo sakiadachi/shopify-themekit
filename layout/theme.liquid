@@ -10,6 +10,7 @@
   <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js'></script>
   {{ content_for_header }} <!-- Header hook for plugins -->
   {{ 'application.scss.css' | asset_url | stylesheet_tag }}
+  {{ 'theme.scss.css' | asset_url | stylesheet_tag }}
   {{ 'application.js' | asset_url | script_tag }}
 </head>
 <body>
@@ -24,7 +25,9 @@
       <a href="{{ link.url }}">{{ link.title }}</a>
     {% endif %}
   {% endfor %}
-
+  {%- if settings.enable_ajax -%}
+  {% include 'cart-popup' %}
+  {%- endif -%}
   <a href="/cart">cart</a>
   <a id="cart-number" href="/cart"></a>
 
@@ -37,6 +40,7 @@
       {{ 'register' | customer_register_link }}
     {% endif %}
   {% endif %}
+
   <main role="main">
     {{ content_for_layout }}
   </main>
@@ -100,3 +104,4 @@
   </script> -->
 </body>
 </html>
+
