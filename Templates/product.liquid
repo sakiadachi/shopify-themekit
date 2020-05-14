@@ -1,66 +1,14 @@
-{% section 'product-template' %}
-{% section 'product-recommendations' %}
-
-<script>
-  // Override default values of shop.strings for each template.
-  // Alternate product templates can change values of
-  // add to cart button, sold out, and unavailable states here.
-  theme.productStrings = {
-    addToCart: {{ 'products.product.add_to_cart' | t | json }},
-    soldOut: {{ 'products.product.sold_out' | t | json }},
-    unavailable: {{ 'products.product.unavailable' | t | json }}
-  }
-</script>
-
-{% assign current_variant = product.selected_or_first_available_variant %}
-
-<script type="application/ld+json">
-  {
-    "@context": "http://schema.org/",
-    "@type": "Product",
-    "name": {{ product.title | json }},
-    "url": {{ shop.url | append: product.url | json }},
-    {%- if product.featured_media -%}
-      {%- assign media_size = product.featured_media.preview_image.width | append: 'x' -%}
-      "image": [
-        {{ product.featured_media | img_url: media_size | prepend: "https:" | json }}
-      ],
-    {%- endif -%}
-    "description": {{ product.description | strip_html | json }},
-    {%- if current_variant.sku != blank -%}
-      "sku": {{ current_variant.sku | json }},
-    {%- endif -%}
-    "brand": {
-      "@type": "Thing",
-      "name": {{ product.vendor | json }}
-    },
-    "offers": [
-      {%- for variant in product.variants -%}
-        {
-          "@type" : "Offer",
-          {%- if variant.sku != blank -%}
-            "sku": {{ variant.sku | json }},
-          {%- endif -%}
-          "availability" : "http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}",
-          "price" : {{ variant.price | divided_by: 100.00 | json }},
-          "priceCurrency" : {{ cart.currency.iso_code | json }},
-          "url" : {{ shop.url | append: variant.url | json }}
-        }{% unless forloop.last %},{% endunless %}
-      {%- endfor -%}
-    ]
-  }
-  </script>
-<!-- 
-<script type='text/javascript application/ld'>
+<script type='text/javascript'>
   // const cartCount = {{ cart.item_count }};
   window.addEventListener('DOMContentLoaded', (event) => {
     event.preventDefault();
-    const cartModal= document.getElementsByClassName("cartModal");
+    const cartModal= document.getElementById("cartModal");
     const span= document.getElementsByClassName("close")[0];
 
     function openModal(event) {
         event.preventDefault();
         cartModal.style.display = "block";
+        console.log('modal opened');
       }
 
       function closeModal() {
@@ -69,8 +17,7 @@
 
       const form = document.getElementById("addToCartForm");
       form.addEventListener('submit', openModal);
-
-      span.addEventListener('click', closeModal)
+      span.addEventListener('click', closeModal);
   });
 </script>
 
@@ -79,9 +26,9 @@
     <span class="close">&times;</span>
     <p>modal opened!</p>
   </div>
-</div> -->
+</div>
 
-<!-- 
+
 {% assign current_variant = product.selected_or_first_available_variant %}
 {% assign featured_image = current_variant.featured_image | default: product.featured_image %}
 <img src="{{ featured_image | img_url: 'large' }}" alt="{{ featured_image.alt | escape }}" id="ProductPhotoImg">
@@ -89,8 +36,27 @@
   <a href="{{ image.src | img_url: 'large' }}">
     <img src="{{ image.src | img_url: 'compact' }}" alt="{{ image.alt | escape }}">
   </a>
-{% endfor %} -->
+{% endfor %}
 
-<!-- <h1>{{ product.title }}</h1>
+<h1>{{ product.title }}</h1>
 
-<div>{{ product.description }}</div> -->
+   <form id="addToCartForm">
+      <select name="id" id="productSelect">
+        {% for variant in product.variants %}
+          {% if variant.available %}
+            <option value="{{ variant.id }}">
+              {{ variant.title }} - {{ variant.price | money_with_currency }}
+            </option>
+          {% else %}
+            <option disabled="disabled">
+              {{ variant.title }} - sold out
+            </option>
+          {% endif %}
+        {% endfor %}
+      </select>
+      {{ current_variant.price | money }}
+      <label for="Quantity">quantity</label>
+      <input type="number" id="Quantity" name="quantity" value="1" min="1">
+      <button type="submit" name="add" id="addToCart">Add to cart</button>
+    </form>
+<div>{{ product.description }}</div>
