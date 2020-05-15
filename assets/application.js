@@ -7561,4 +7561,4 @@
 //   theme.ProductVideo.loadVideos(theme.ProductVideo.hosts.youtube);
 // }
 
-// $(theme.init);
+// $(theme.init)

@@ -146,7 +146,7 @@
             {%- if current_variant.available == false %} product-form--variant-sold-out {%- endif -%}
           {%- endcapture %}
 
-          {% form 'product', product, class:form_classes, novalidate: 'novalidate', data-product-form: '' %}
+          <!-- {% form 'product', product, class:form_classes, novalidate: 'novalidate', data-product-form: '' %}
             {% unless product.has_only_default_variant %}
               <div class="product-form__controls-group">
                 {% for option in product.options_with_values %}
@@ -224,7 +224,9 @@
                 {% endif %}
               </div>
             </div>
-          {% endform %}
+          {% endform %} -->
+
+          
         </div>
 
         {%- comment -%}

@@ -16,16 +16,6 @@
   </div>
 {% endif %}
 
-<script>
-  // Override default values of shop.strings for each template.
-  // Alternate product templates can change values of
-  // add to cart button, sold out, and unavailable states here.
-  theme.productStrings = {
-    addToCart: {{ 'products.product.add_to_cart' | t | json }},
-    soldOut: {{ 'products.product.sold_out' | t | json }},
-    unavailable: {{ 'products.product.unavailable' | t | json }}
-  };
-</script> 
 
 <div id="cartModal" class="modal">
   <div class="modal-content">
@@ -44,72 +34,104 @@
   </a>
 {% endfor %}
 
+
 <h1>{{ product.title }}</h1>
-
-   <form id="addToCartForm">
-      <select name="id" id="productSelect">
-        {% for variant in product.variants %}
-          {% if variant.available %}
-            <option value="{{ variant.id }}">
-              {{ variant.title }} - {{ variant.price | money_with_currency }}
-            </option>
-          {% else %}
-            <option disabled="disabled">
-              {{ variant.title }} - sold out
-            </option>
-          {% endif %}
-        {% endfor %}
-      </select>
-      {{ current_variant.price | money }}
-      <label for="Quantity">quantity</label>
-      <input type="number" id="Quantity" name="quantity" value="1" min="1">
-      <button type="submit" name="add" id="addToCart">Add to cart</button>
-    </form>
+<form id="add-to-cart-form">
+  <select name="id" id="product-select">
+    {% for variant in product.variants %}
+      {% if variant.available %}
+        <option value="{{ variant.id }}">
+          {{ variant.title }} - {{ variant.price | money_with_currency }}
+        </option>
+      {% else %}
+        <option disabled="disabled">
+          {{ variant.title }} - sold out
+        </option>
+      {% endif %}
+    {% endfor %}
+  </select>
+  <label for="quantity">Quantity</label>
+  <input type="number" id="Quantity" value="1" name="quantity" value="1" min="1">
+  <button type="submit" name="add" id="add-to-cart" value="Add to cart">add to cart</button>
+</form>
 <div>{{ product.description }}</div>
-
-
 <script type='text/javascript' >
-  window.addEventListener('DOMContentLoaded', (event) => {
-  event.preventDefault();
-  const cartModal= document.getElementById("cartModal");
-  const span= document.getElementsByClassName("close")[0];
-  const form = document.getElementById("addToCartForm");
-  const cartPopup = document.querySelector('cart-popup-wrapper');
-  cartPopup.classList.remove("cart-popup-wrapper");
+    async function openModal(event){
+      event.preventDefault();
+      const cartPopup = document.getElementById("cartModal");
+      cartPopup.style.display= "block";
 
-  form.addEventListener('submit', openModal);
-  span.addEventListener('click', closeModal);
-  function closeModal(event) {
+      // const data = new FormData(form)
+      // const response = await fetch('/cart/add.js', 
+      // {
+      //   method: 'POST',
+      //   headers: {"Content-Type": "application/json"},
+      //   body: JSON.stringify(data)
+      // }
+      // ).then(
+      //   res => res.json()
+      // ).then(data => {
+      //   console.log(data)
+      // })
+      // .catch(error => {
+      //   console.log(error, "error");
+      // });
+  }
+
+  function closeModal() {
     cartModal.style.display = "none";
   }
-  function openModal(data){
-    cartPopup.style.display = "block";
-    console.log(data);
-  }
 
-  
-  // async function addItem() {
-  //     await fetch('/add/cart',
-  //     {
-  //       method: 'POST',
-  //       headers: {'Content-Type': 'application/json'},
-  //       body: JSON.stringify()
-  //   })
-  //   .then(reponse => response.json())
-  //   .then(data => {
-  //     openModal(data);
-  //     closeModal();
-  //   })
-  //   .catch((error) => {
-  //     console.error('Error: ', error);
-  //   })
-  //   }
-  // function openModal(data){
-  //   cartPopup.style.display = "block";
-  //   console.log(data);
-  // }
-  });
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const span = document.getElementsByClassName("close")[0];
+    const form = document.getElementById("add-to-cart-form");
+    const data = new FormData(form);
 
+    form.addEventListener('submit', openModal);
+    span.addEventListener('click', closeModal);
+
+});
+
+// window.addEventListener('DOMContentLoaded', (event) => {
+//     event.preventDefault();
+//     const cartModal= document.getElementById("cartModal");
+//     const span= document.getElementsByClassName("close")[0];
+//     const form = document.getElementById("add-to-cart-form");
+
+//     form.addEventListener('submit', openModal, addItem);
+
+//     function openModal(event){
+//       event.preventDefault();
+//       cartModal.style.display = "block";
+//     }
+//     span.addEventListener('click', closeModal);
+//     function closeModal() {
+//       cartModal.style.display = "none";
+//     }
+
+//     window.onclick = function(event) {
+//       if (event.target == cartModal) {
+//         cartModal.style.display = "none";
+//       }
+//     } 
+//     async function addItem(form_id) {
+//         await fetch('/cart/add.js',
+//         {
+//           method: 'POST',
+//           headers: {'Content-Type': 'application/json'},
+//           body: JSON.stringify()
+//       })
+//       .then(reponse => response.json())
+//       .then(data => {
+//         console.log(data);
+//       })
+//       .catch((error) => {
+//         console.error('Error: ', error);
+//       })
+//     }
+// });
+
+// change font depend on availability of stock
 //   var selectCallback = function(variant, selector){
 //     if(variant && variant.available){
 //         $('#add-to-cart').removeClass('disabled').removeAttr('disabled');
@@ -124,4 +146,4 @@
 //         // Swap price with a 'Sold Out' message
 //     }
 // };
-</script>
+</script> 
