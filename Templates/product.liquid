@@ -55,11 +55,16 @@
   <button type="submit" name="add" id="add-to-cart" value="Add to cart">add to cart</button>
 </form>
 <div>{{ product.description }}</div>
+
 <script type='text/javascript' >
     async function openModal(event){
       event.preventDefault();
       const cartPopup = document.getElementById("cartModal");
       cartPopup.style.display= "block";
+
+      const newDiv = document.createElement("div")
+      newDiv.textContent = "Item added!";
+      cartPopup.appendChild(newDiv);
 
       // const data = new FormData(form)
       // const response = await fetch('/cart/add.js', 
@@ -77,60 +82,16 @@
       //   console.log(error, "error");
       // });
   }
-
   function closeModal() {
     cartModal.style.display = "none";
   }
-
   window.addEventListener('DOMContentLoaded', (event) => {
     const span = document.getElementsByClassName("close")[0];
     const form = document.getElementById("add-to-cart-form");
     const data = new FormData(form);
-
     form.addEventListener('submit', openModal);
     span.addEventListener('click', closeModal);
-
 });
-
-// window.addEventListener('DOMContentLoaded', (event) => {
-//     event.preventDefault();
-//     const cartModal= document.getElementById("cartModal");
-//     const span= document.getElementsByClassName("close")[0];
-//     const form = document.getElementById("add-to-cart-form");
-
-//     form.addEventListener('submit', openModal, addItem);
-
-//     function openModal(event){
-//       event.preventDefault();
-//       cartModal.style.display = "block";
-//     }
-//     span.addEventListener('click', closeModal);
-//     function closeModal() {
-//       cartModal.style.display = "none";
-//     }
-
-//     window.onclick = function(event) {
-//       if (event.target == cartModal) {
-//         cartModal.style.display = "none";
-//       }
-//     } 
-//     async function addItem(form_id) {
-//         await fetch('/cart/add.js',
-//         {
-//           method: 'POST',
-//           headers: {'Content-Type': 'application/json'},
-//           body: JSON.stringify()
-//       })
-//       .then(reponse => response.json())
-//       .then(data => {
-//         console.log(data);
-//       })
-//       .catch((error) => {
-//         console.error('Error: ', error);
-//       })
-//     }
-// });
-
 // change font depend on availability of stock
 //   var selectCallback = function(variant, selector){
 //     if(variant && variant.available){
