@@ -23,12 +23,15 @@
     <h2 class="cart-popup__heading">{{ 'cart.popup.added_to_cart' |t }}</h2>
 
     <div class="cart-popup-item">
+      <p>{{ line_item.product.title }}</p>
+
       <p>{{ product.title }}</p>
+      {{ product.image | img_url:'100x100' | img_tag }}
 
-      {{ line_item.title }}
-      {{ line_item.image | img_url: '100x100' | img_tag }}
-      {{ line_item.product }}
-
+    </div>
+    <div class="cart-popup__footer">
+      <a href="#" alt="back to shop">Back to shop</a>
+      <a href="#" alt="check out">Check out</a>
     </div>
   </div>
 
@@ -62,26 +65,62 @@
   </select>
   <label for="quantity">Quantity</label>
   <input type="number" id="Quantity" value="1" name="quantity" value="1" min="1">
-  <button type="submit" name="add" id="add-to-cart" value="Add to cart" data-add-to-cart>add to cart</button>
+  <button type="submit" name="add" id="add-to-cart" value="Add to cart">add to cart</button>
 </form>
 <div>{{ product.description }}</div>
 
 <script>
-    async function openModal(event){
+  const cartCount = {{ cart.item_count }};
+
+
+    function addItemToCart(event){
       event.preventDefault();
-      const cartPopup = document.getElementById("cart-popup-wrapper");
-      cartPopup.style.display= "block";
+
+      jQuery.ajax({
+              type: 'POST',
+              url: '/cart/add.js',
+              data: $('#'+'add-to-cart-form').serialize(),
+              dataType: 'json',
+              success: function() {
+                  openModal();
+              },
+      }	);
+    }                      
+
+      // function addItem(data) {
+      //   fetch('/cart/add.js', 
+      //   {
+      //     method: 'POST',
+      //     body: JSON.stringify(data)
+      //   }
+      // ).then(
+      //   res => {
+      //     return res.json()
+      // }).then(content => {
+      //   console.log(content);
+      // })
+      // .catch(error => {
+      //   console.log(error, "error");
+      // });
+      // }
+
+
+
+  function openModal(e) {
+    const cartPopup = document.getElementById("cart-popup-wrapper");
+    cartPopup.style.display= "block";
   }
   function closeModal() {
     const cartPopup = document.getElementById("cart-popup-wrapper");
     cartPopup.style.display = "none";
   }
+
   window.addEventListener('DOMContentLoaded', (event) => {
     const span = document.getElementsByClassName("close")[0];
     const form = document.getElementById("add-to-cart-form");
-    const data = new FormData(form);
     
-    form.addEventListener('submit', openModal);
+
+    form.addEventListener('submit', addItemToCart);
     span.addEventListener('click', closeModal);
 });
 // change font depend on availability of stock
