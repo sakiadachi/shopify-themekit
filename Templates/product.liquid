@@ -17,11 +17,21 @@
 {% endif %}
 
 
-<div id="cartModal" class="modal">
-  <div class="modal-content">
+<div id="cart-popup-wrapper" class="cart-popup">
+  <div class="cart-popup__header">
     <span class="close">&times;</span>
-    <p>modal opened!</p>
+    <h2 class="cart-popup__heading">{{ 'cart.popup.added_to_cart' |t }}</h2>
+
+    <div class="cart-popup-item">
+      <p>{{ product.title }}</p>
+
+      {{ line_item.title }}
+      {{ line_item.image | img_url: '100x100' | img_tag }}
+      {{ line_item.product }}
+
+    </div>
   </div>
+
 </div>
 
 
@@ -52,43 +62,25 @@
   </select>
   <label for="quantity">Quantity</label>
   <input type="number" id="Quantity" value="1" name="quantity" value="1" min="1">
-  <button type="submit" name="add" id="add-to-cart" value="Add to cart">add to cart</button>
+  <button type="submit" name="add" id="add-to-cart" value="Add to cart" data-add-to-cart>add to cart</button>
 </form>
 <div>{{ product.description }}</div>
 
-<script type='text/javascript' >
+<script>
     async function openModal(event){
       event.preventDefault();
-      const cartPopup = document.getElementById("cartModal");
+      const cartPopup = document.getElementById("cart-popup-wrapper");
       cartPopup.style.display= "block";
-
-      const newDiv = document.createElement("div")
-      newDiv.textContent = "Item added!";
-      cartPopup.appendChild(newDiv);
-
-      // const data = new FormData(form)
-      // const response = await fetch('/cart/add.js', 
-      // {
-      //   method: 'POST',
-      //   headers: {"Content-Type": "application/json"},
-      //   body: JSON.stringify(data)
-      // }
-      // ).then(
-      //   res => res.json()
-      // ).then(data => {
-      //   console.log(data)
-      // })
-      // .catch(error => {
-      //   console.log(error, "error");
-      // });
   }
   function closeModal() {
-    cartModal.style.display = "none";
+    const cartPopup = document.getElementById("cart-popup-wrapper");
+    cartPopup.style.display = "none";
   }
   window.addEventListener('DOMContentLoaded', (event) => {
     const span = document.getElementsByClassName("close")[0];
     const form = document.getElementById("add-to-cart-form");
     const data = new FormData(form);
+    
     form.addEventListener('submit', openModal);
     span.addEventListener('click', closeModal);
 });
