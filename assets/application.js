@@ -1,6 +1,9 @@
 
 
-
+document.addEventListener("DOMContentLoaded", function() {
+    const firstModal = document.getElementById("first-modal");
+    firstModal.style.display= "block";
+  });
 
 
 

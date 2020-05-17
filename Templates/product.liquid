@@ -7,70 +7,79 @@
 {% section 'product-recommendations' %}
 {% endcomment %}
 
+<!-- <div id="ProductSection-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  data-section-type="product"
+  data-enable-history-state="true"
+  data-ajax-enabled="{{ settings.enable_ajax }}"
+> -->
 {% if collection %}
-  <div class="text-center return-link-wrapper page-width">
-    <a href="{{ collection.url }}" class="btn btn--secondary btn--has-icon-before return-link">
-      {% include 'icon-arrow-left' %}
-      {{ 'products.product.back_to_collection' | t: title: collection.title }}
+
+    <div class="text-center return-link-wrapper page-width">
+      <a href="{{ collection.url }}" class="btn btn--secondary btn--has-icon-before return-link">
+        {% include 'icon-arrow-left' %}
+        {{ 'products.product.back_to_collection' | t: title: collection.title }}
+      </a>
+    </div>
+  {% endif %}
+
+  <div id="cart-popup-wrapper" class="cart-popup">
+    <div class="cart-popup__header">
+      <span class="close">&times;</span>
+      <h2 class="cart-popup__heading">{{ 'cart.popup.added_to_cart' |t }}</h2>
+
+      <div class="cart-popup-item">
+        <p>{{ product.title }}</p>
+      </div>
+      <div class="cart-popup-price"></div>
+      <div class="cart-popup__footer">
+        <a href="#" alt="back to shop">Back to shop</a>
+        <a href="#" alt="check out">Check out</a>
+      </div>
+    </div>
+
+  </div>
+
+
+  {% assign current_variant = product.selected_or_first_available_variant %}
+  {%- assign price = current_variant.price -%}
+  {% assign featured_image = current_variant.featured_image | default: product.featured_image %}
+  <img src="{{ featured_image | img_url: 'large' }}" alt="{{ featured_image.alt | escape }}" id="ProductPhotoImg">
+  {% for image in product.images %}
+    <a href="{{ image.src | img_url: 'large' }}">
+      <img src="{{ image.src | img_url: 'compact' }}" alt="{{ image.alt | escape }}">
     </a>
-  </div>
-{% endif %}
+  {% endfor %}
 
+  <div class="product-single__title">
+    <h1>{{ product.title }}</h1>
 
-<div id="cart-popup-wrapper" class="cart-popup">
-  <div class="cart-popup__header">
-    <span class="close">&times;</span>
-    <h2 class="cart-popup__heading">{{ 'cart.popup.added_to_cart' |t }}</h2>
-
-    <div class="cart-popup-item">
-      <p>{{ line_item.product.title }}</p>
-
-      <p>{{ product.title }}</p>
-      {{ product.image | img_url:'100x100' | img_tag }}
-
-    </div>
-    <div class="cart-popup__footer">
-      <a href="#" alt="back to shop">Back to shop</a>
-      <a href="#" alt="check out">Check out</a>
-    </div>
   </div>
 
-</div>
+  <div class="product__price">
+    <p>{{ current_variant.price | money }}</p>
+  </div>
 
+  <form id="add-to-cart-form">
+    <select name="id" id="product-select-{{ section.id }}" >
+      {% for variant in product.variants %}
+          <option value="{{ variant.id }}"
+          {%- if variant == current_variant %} selected="selected" {%- endif -%}
+          >
+            {{ variant.title }} {%- if variant.available == false %} - {{ 'products.product.sold_out' | t }}{% endif %}
+          </option>
+        {% endfor %}
+      </select>
 
-{% assign current_variant = product.selected_or_first_available_variant %}
-{% assign featured_image = current_variant.featured_image | default: product.featured_image %}
-<img src="{{ featured_image | img_url: 'large' }}" alt="{{ featured_image.alt | escape }}" id="ProductPhotoImg">
-{% for image in product.images %}
-  <a href="{{ image.src | img_url: 'large' }}">
-    <img src="{{ image.src | img_url: 'compact' }}" alt="{{ image.alt | escape }}">
-  </a>
-{% endfor %}
+    <label for="quantity">Quantity</label>
+    <input type="number" id="Quantity" value="1" name="quantity" value="1" min="1">
+    <button type="submit" name="add" id="add-to-cart" value="Add to cart">add to cart</button>
+  </form>
+  <div>{{ product.description }}</div>
 
-
-<h1>{{ product.title }}</h1>
-<form id="add-to-cart-form">
-  <select name="id" id="product-select">
-    {% for variant in product.variants %}
-      {% if variant.available %}
-        <option value="{{ variant.id }}">
-          {{ variant.title }} - {{ variant.price | money_with_currency }}
-        </option>
-      {% else %}
-        <option disabled="disabled">
-          {{ variant.title }} - sold out
-        </option>
-      {% endif %}
-    {% endfor %}
-  </select>
-  <label for="quantity">Quantity</label>
-  <input type="number" id="Quantity" value="1" name="quantity" value="1" min="1">
-  <button type="submit" name="add" id="add-to-cart" value="Add to cart">add to cart</button>
-</form>
-<div>{{ product.description }}</div>
-
+<!-- </div> -->
 <script>
-  const cartCount = {{ cart.item_count }};
+  // const cartCount = {{ cart.item_count }};
 
 
     function addItemToCart(event){
