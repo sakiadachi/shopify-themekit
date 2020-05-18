@@ -16,18 +16,23 @@
   {{content_for_header}} 
 </head>
 <body>
-  <nav>
-    {% for link in linklists.main-menu.links %}
-      {% assign child_list_handle = link.title | handleize %}
-      {% if linklists[child_list_handle].links != blank %}
-        <a href="{{ link.url }}">{{ link.title }}</a>
-        [{% for childlink in linklists[child_list_handle].links %}
-          <a href="{{ childlink.url }}">{{ childlink.title | escape }}</a>
-        {% endfor %}]
-      {% else %}
-        <a href="{{ link.url }}">{{ link.title }}</a>
-      {% endif %}
-    {% endfor %}
+  {% for link in linklists.main-menu.links %}
+    {% assign child_list_handle = link.title | handleize %}
+    {% if linklists[child_list_handle].links != blank %}
+      <a href="{{ link.url }}">{{ link.title }}</a>
+      [{% for childlink in linklists[child_list_handle].links %}
+        <a href="{{ childlink.url }}">{{ childlink.title | escape }}</a>
+      {% endfor %}]
+    {% else %}
+      <a href="{{ link.url }}">{{ link.title }}</a>
+    {% endif %}
+  {% endfor %}
+  {%- if settings.enable_ajax -%}
+  {% include 'cart-popup' %}
+  
+  {%- endif -%}
+  <a href="/cart">cart</a>
+  <a id="cart-number" href="/cart"></a>
 
     <a href="/cart">cart</a>
     <a id="cart-number" href="/cart"></a>
