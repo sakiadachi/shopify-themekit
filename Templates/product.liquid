@@ -1,11 +1,3 @@
-{% comment %}
-  The contents of the product.liquid template can be found in /sections/product-template.liquid
-{% endcomment %}
-
-{% comment %}
-{% section 'product-template' %}
-{% section 'product-recommendations' %}
-{% endcomment %}
 
 {% if collection %}
   <div class="text-center return-link-wrapper page-width">
@@ -18,23 +10,20 @@
 
 
 <div id="cart-popup-wrapper" class="cart-popup">
-  <div class="cart-popup__header">
-    <span class="close">&times;</span>
-    <h2 class="cart-popup__heading">{{ 'cart.popup.added_to_cart' |t }}</h2>
-
-    <div class="cart-popup-item">
-      <p>{{ line_item.product.title }}</p>
-
-      <p>{{ product.title }}</p>
-      {{ product.image | img_url:'100x100' | img_tag }}
-
+  <div class="cart-popup__container">
+    <div class="cart-popup__header">
+      <span class="cart-popup-close">&times;</span>
+      <h2 class="cart-popup__heading">{{ 'cart.popup.added_to_cart' |t }}</h2>
     </div>
-    <div class="cart-popup__footer">
-      <a href="#" alt="back to shop">Back to shop</a>
-      <a href="#" alt="check out">Check out</a>
-    </div>
+      <div class="cart-popup-item">
+        <p>{{ product.title }}</p>
+        {{ product.image}}
+      </div>
+      <div class="cart-popup__footer">
+        <a href="#" alt="back to shop">Back to shop</a>
+        <a href="#" alt="check out">Check out</a>
+      </div>
   </div>
-
 </div>
 
 
@@ -69,10 +58,20 @@
 </form>
 <div>{{ product.description }}</div>
 
+  <!-- Modal -->
+  <div class="modal fade in hide" id="myModal">
+    <div class="modal-header">
+      <h3>Welcome to the page!</h3>
+    </div>
+    <div class="modal-body">
+      <p>Modal opens when the page loaded!</p>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="close-btn">Close</a>
+    </div>
+  </div>
+
 <script>
-  const cartCount = {{ cart.item_count }};
-
-
     function addItemToCart(event){
       event.preventDefault();
 
@@ -82,7 +81,7 @@
               data: $('#'+'add-to-cart-form').serialize(),
               dataType: 'json',
               success: function() {
-                  openModal();
+                  openCartPopup();
               },
       }	);
     }                      
@@ -106,36 +105,22 @@
 
 
 
-  function openModal(e) {
+  function openCartPopup(e) {
     const cartPopup = document.getElementById("cart-popup-wrapper");
     cartPopup.style.display= "block";
   }
-  function closeModal() {
+  function closeCartPopup() {
     const cartPopup = document.getElementById("cart-popup-wrapper");
     cartPopup.style.display = "none";
   }
 
   window.addEventListener('DOMContentLoaded', (event) => {
-    const span = document.getElementsByClassName("close")[0];
+    const span = document.getElementsByClassName("cart-popup-close")[0];
     const form = document.getElementById("add-to-cart-form");
     
 
     form.addEventListener('submit', addItemToCart);
-    span.addEventListener('click', closeModal);
+    span.addEventListener('click', closeCartPopup);
 });
-// change font depend on availability of stock
-//   var selectCallback = function(variant, selector){
-//     if(variant && variant.available){
-//         $('#add-to-cart').removeClass('disabled').removeAttr('disabled');
-//         // Enable the Add to Cart button
-//         $('.options .price').html('<strong>'+Shopify.formatMoney(variant.price, "{{shop.money_with_currency_format}}")+'</strong>');
-//         // Show price of the currently selected variant
-//     }
-//     else{
-//         $('#add-to-cart').addClass('disabled').attr('disabled', 'disabled');
-//         // Disable the Add to Cart button
-//         $('.options .price').text("Sold Out!");
-//         // Swap price with a 'Sold Out' message
-//     }
-// };
+
 </script> 
