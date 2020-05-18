@@ -27,6 +27,7 @@
   {% endfor %}
   {%- if settings.enable_ajax -%}
   {% include 'cart-popup' %}
+  
   {%- endif -%}
   <a href="/cart">cart</a>
   <a id="cart-number" href="/cart"></a>
@@ -44,6 +45,11 @@
   <main role="main">
     {{ content_for_layout }}
   </main>
+
+  <!-- {% assign Rondom_Title = {{ settings.random_title }} %} -->
+<div></div>
+{{ settings.random_title }}
+
 
 </body>
 </html>
