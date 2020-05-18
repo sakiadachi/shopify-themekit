@@ -104,6 +104,7 @@
   margin: 1rem 0;
 }
 
+<<<<<<< Updated upstream
 // .cart-popup-item__image-wrapper {
 //   position: relative;
 //   flex-basis: 18%;
@@ -183,3 +184,22 @@
 // .cart-popup__dismiss-button {
 //   font-size: em($font-size-base - 2px);
 // }
+=======
+/* Add to cart button */
+#add-to-cart-btn {
+  width: 10em;
+  padding: 10px 20px;
+  border: none;
+}
+
+.instock {
+  background-color: rgb(39, 154, 47);
+}
+
+.nostock {
+  background-color: #888;
+}
+.nostock:hover {
+  background-color: rgb(0, 97, 216);
+}
+>>>>>>> Stashed changes
