@@ -1,7 +1,8 @@
 $background: #fefefe;
 $border-base: 1px solid #888;
-$primary-blue: #00b8ff;
-$primary-green: #329932;
+$primary-blue: #0038df;
+$primary-green: #54c674;
+$font-color: #333;
 
 html{
 	font-family: sans-serif;
@@ -13,25 +14,105 @@ body {
 	color: #333;
 	width: 100%;
 	margin: 0;
-	padding: 10px;
+	padding: 0;
 	background-color: $background;
+	justify-content: center;
 }
 
 nav {
-font-size: 15px;
-	margin-bottom: 20px;
+	font-size: 1.2em;
+	margin: 1em 0 2em 0;
+	padding: 0;
+	width: 100%;
+	border-bottom: $font-color 1px solid;
+	display: flex;
+	justify-content: center;
 
-	a {
-		color: $primary-blue;
-	}
+		li {
+			list-style: none;
+			margin: 0 1em 1em 0;
+			border-bottom: transparent 1px solid;
 
-	a:visited {
-		color: $primary-blue;
+			a {
+				text-decoration: none;
+				color: $font-color;
+				padding: 0;
+
+				&:hover {
+					border-bottom: $primary-green 1px solid;
+				}
+			}
+		}
+}
+.main {
+	padding: 0px 30px;
+}
+.column {
+	display: flex;
+	flex-direction: column;
+}
+.row {
+	display: flex;
+	flex-direction: row;
+}
+.column.collection {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	padding: 2em;
+}
+.row.collection {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+}
+.select-collection {
+	display: flex;
+	justify-content: flex-start;
+	font-size: 1.8em;
+	ul {
+		display: flex;
+		margin: 0;
+		padding:0;
+		// justify-content: center;
+		li {
+			list-style: none;
+			margin: 0px 1.5em 2em 0px;
+			border: $font-color 1px solid;
+			a {
+				text-decoration: none;
+				color: $font-color;
+				padding: 0.5em 1em;
+				background-color: $primary-green;
+				&:hover {
+					background-color: rgb(242, 242, 128);
+				}
+				&:active {
+					background-color: rgb(242, 242, 128);
+				}
+			}
+		}
 	}
+}
+
+.capital-letter {
+	text-transform: uppercase;
 }
 .random-title {
 	font-size: 1.3em;
 }
+
+.icon-arrow-right,
+.icon-arrow-left {
+  height: 9px;
+}
+
+.product-container {
+	margin-top: 5em;
+}
+
+
 /* Welcome modal opens when open a product page */
 .fade.in {
 	opacity: 1;
@@ -86,12 +167,10 @@ font-size: 15px;
 .cart-popup {
 	display: none;
 	position: fixed;
-	z-index: 1;
+	z-index: 1200;
 	width: 100%;
 	height: 100%;
 	overflow: auto;
-	background-color: rgb(0,0,0);
-	background-color: rgba(0,0,0,0.4);
 }
 
 .cart-popup__container {
@@ -105,6 +184,7 @@ font-size: 15px;
 	margin: auto;
 	padding: 20px;
 	border: $border-base;
+	box-shadow: 3px 3px 5px 6px #ccc;
 }
 
 /* The Close Button */
@@ -127,22 +207,38 @@ font-size: 15px;
 	margin: 1rem 0;
 }
 
-/* Add to cart button */
-#add-to-cart-btn {
-	width: 10em;
-	padding: 10px 20px;
-	border: none;
+/* Add to cart */
+#add-to-cart-form {
+	margin-top: 2em;
 }
-#add-to-cart-btn:hover {
-	background-color: #9eed50;
+.form-btn {
+	font-size: 1.3em;
+	width: 100%;
+	height: 2.5em;
+	margin-top: 1em;
+	background-color: $background;
+	border: transparent 1px solid;
 }
 .instock {
-	background-color: $primary-green;
+	border: $primary-green 1px solid;
+	&:hover {
+		background-color: $primary-green;
+	}
 }
 
 .nostock {
 	background-color: #888;
+	&:hover {
+		background-color: $primary-blue;
+	}
 }
-.nostock:hover {
-	background-color: $primary-blue;
+/* Product description */
+.low-stock {
+	color: rgb(227, 66, 66);
+}
+.out-of-stock {
+	color: #888;
+}
+.product-description {
+	width: 40%;
 }
