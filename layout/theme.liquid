@@ -1,57 +1,53 @@
 <!doctype html>
 <html lang="{{ shop.locale }}">
-<head>
-  <title>{{ page_title }}</title>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="description" content="{{ page_description | escape }}">
-  <link rel="canonical" href="{{ canonical_url }}">
-  <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-  {{ '//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js' | script_tag }}
-  {{ '//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' | script_tag }}
-  <!-- {{ '//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' | stylesheet_tag }} -->
-  {{ '//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css' | stylesheet_tag }}
-  {{ 'application.scss.css' | asset_url | stylesheet_tag }}
-  {{ 'application.js' | asset_url | script_tag }}
-  {{content_for_header}} 
-</head>
-<body>
-  {% for link in linklists.main-menu.links %}
-    {% assign child_list_handle = link.title | handleize %}
-    {% if linklists[child_list_handle].links != blank %}
-      <a href="{{ link.url }}">{{ link.title }}</a>
-      [{% for childlink in linklists[child_list_handle].links %}
-        <a href="{{ childlink.url }}">{{ childlink.title | escape }}</a>
-      {% endfor %}]
-    {% else %}
-      <a href="{{ link.url }}">{{ link.title }}</a>
-    {% endif %}
-  {% endfor %}
-  {%- if settings.enable_ajax -%}
-  {% include 'cart-popup' %}
-  
-  {%- endif -%}
-  <a href="/cart">cart</a>
-  <a id="cart-number" href="/cart"></a>
+    <head>
+        <title>{{ page_title }}</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="{{ page_description | escape }}">
+        <link rel="canonical" href="{{ canonical_url }}">
+        <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+        {{ '//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js' | script_tag }}
+        {{ 'api.jquery.js' | shopify_asset_url | script_tag }}
+        {{ 'application.scss.css' | asset_url | stylesheet_tag }}
+        {{ 'application.js' | asset_url | script_tag }}
 
-    <a href="/cart">cart</a>
-    <a id="cart-number" href="/cart"></a>
+        {{ content_for_header }} <!-- Header hook for plugins -->
+    </head>
 
-    {% if shop.customer_accounts_enabled %}
-      {% if customer %}
-        <a href="/account">account</a>
-        {{ 'log out'  | customer_logout_link }}
-      {% else %}
-        {{ 'log in ' | customer_login_link }}
-        {{ 'register' | customer_register_link }}
-      {% endif %}
-    {% endif %}
-  </nav>
-  <main role="main">
-    {{ content_for_layout }}
-  </main>
+    <body>
+        <nav class="capital-letter">
+                {% for link in linklists.main-menu.links %}
+                {% assign child_list_handle = link.title | handleize %}
+                    {% if linklists[child_list_handle].links != blank %}
+                    <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                    [{% for childlink in linklists[child_list_handle].links %}
+                    <li><a href="{{ childlink.url }}">{{ childlink.title | escape }}</a></li>
+                    {% endfor %}]
+                    {% else %}
+                    <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                    {% endif %}
+                {% endfor %}
 
-  {{ settings.random_title }}
+                <li><a href="/cart">cart</a></li>
+                <li><a id="cart-number" href="/cart"></a></li>
 
-</body>
+                <li>
+                {% if shop.customer_accounts_enabled %}
+                    {% if customer %}
+                    <a href="/account">account</a>
+                    {{ 'log out'  | customer_logout_link }}
+                    {% else %}
+                    {{ 'log in ' | customer_login_link }}
+                    {{ 'register' | customer_register_link }}
+                    {% endif %}
+                {% endif %}
+                </li>
+        </nav>
+
+        <main role="main" class="main">
+            {{ content_for_layout }}
+        </main>
+        <div class="random-title">{{ settings.random_title }}</div>
+    </body>
 </html>
