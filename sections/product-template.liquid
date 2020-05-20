@@ -1,28 +1,42 @@
-<div class="modal fade in hide" id="myModal">
-    <div class="modal-header">
-        <h3>Welcome to the page!</h3>
-    </div>
-    <div class="modal-body">
-        <p>Modal opens when the page loaded!</p>
-    </div>
-    <div class="modal-footer">
-        <a href="#" class="close-btn">Close</a>
+{% assign stock = product.variants.first.inventory_quantity %}
+
+<div id="new-cart-item">
+    <div class="cart-popup-container">
+        <div class="cart-popup__header right">
+            <span class="cart-popup-close">&times;</span>
+        </div>
+        <div class="cart-popup-item">
+            <h2 class="cart-popup__heading">{{ 'cart.popup.added_to_cart' |t }}</h2>
+            <p>{{ product.title }}</p>
+            {{ product.image }}
+        </div>
     </div>
 </div>
 
-<div id="cart-popup-wrapper" class="cart-popup">
-    <div class="cart-popup__container">
-        <div class="cart-popup__header">
-            <span class="cart-popup-close">&times;</span>
-            <h2 class="cart-popup__heading">{{ 'cart.popup.added_to_cart' |t }}</h2>
+<div class="modal fade in hide" id="product-modal">
+    <div class="column">
+        <!-- <div class="modal-header right">
+            <span class="close-btn right">&times;</span>
+        </div> -->
+        <div class="modal-product-title">
+            <span class="close-btn right">&times;</span>
+            <h3>{{ product.title }}</h3>
+            <p>We have {{ stock }} in stock</p>
         </div>
-        <div class="cart-popup-item">
-            <p>{{ product.title }}</p>
-            {{ product.image}}
+    
+        <div class="cart-item">
+            <h2>Your cart</h2>
+                {% for item in cart.items %}
+                <div class="order">
+                    <li><a href="{{ item.url }}">{{ item.product.title }}</a></li>
+                    <li><a href="/cart/change?line={{ forloop.index }}&amp;quantity=0"><span class="remove-btn">remove</span></a></li>
+                    <li>Qty: {{ cart.item_count }}</li>
+                </div>
+            {% endfor %}
         </div>
-        <div class="cart-popup__footer">
-            <a href="#" alt="back to shop">Back to shop</a>
-            <a href="#" alt="check out">Check out</a>
+        <div class="column">
+            <li> Total: {{ cart.total_price | money }}</li>
+            <button class="checkout-btn"><a href="/cart" alt="check out">Check out</a></button>
         </div>
     </div>
 </div>
@@ -97,11 +111,11 @@ function addItemToCart(event){
 }
 
 function openCartPopup(e) {
-    const cartPopup = document.getElementById("cart-popup-wrapper");
+    const cartPopup = document.getElementById("new-cart-item");
     cartPopup.style.display= "block";
 }
 function closeCartPopup() {
-    const cartPopup = document.getElementById("cart-popup-wrapper");
+    const cartPopup = document.getElementById("new-cart-item");
     cartPopup.style.display = "none";
 }
 
