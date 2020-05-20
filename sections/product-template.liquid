@@ -1,29 +1,15 @@
-{% assign stock = product.variants.first.inventory_quantity %}
-
-<div id="new-cart-item">
-    <div class="cart-popup-container">
-        <div class="cart-popup__header right">
-            <span class="cart-popup-close">&times;</span>
-        </div>
-        <div class="cart-popup-item">
-            <h2 class="cart-popup__heading">{{ 'cart.popup.added_to_cart' |t }}</h2>
-            <p>{{ product.title }}</p>
-            {{ product.image }}
-        </div>
-    </div>
-</div>
-
 <div class="modal fade in hide" id="product-modal">
     <div class="column">
-        <!-- <div class="modal-header right">
-            <span class="close-btn right">&times;</span>
-        </div> -->
         <div class="modal-product-title">
             <span class="close-btn right">&times;</span>
             <h3>{{ product.title }}</h3>
+
+            <!-- Show the current availability of the product (c.i.) -->
+            {% assign stock = product.variants.first.inventory_quantity %}
             <p>We have {{ stock }} in stock</p>
         </div>
     
+        <!-- Show the current information of the user cart (c.ii.) -->
         <div class="cart-item">
             <h2>Your cart</h2>
                 {% for item in cart.items %}
@@ -36,7 +22,7 @@
         </div>
         <div class="column">
             <li> Total: {{ cart.total_price | money }}</li>
-            <button class="checkout-btn"><a href="/cart" alt="check out">Check out</a></button>
+            <a class="checkout-btn capital-letter" href="{{ routes.cart_url }}" alt="check out">Check out</a>
         </div>
     </div>
 </div>
@@ -53,8 +39,12 @@
         {% endfor %}
     </div>
 
+    <!--- Show availability of the product (a.ii.) -->
     <div class="column product-description">
         <h1>{{ product.title }}</h1>
+        <div id="success-message" class="success-message">
+            {{ 'cart.popup.added_to_cart' |t }}
+        </div>
         <div class="capital-letter">
             {% if product.variants.first.inventory_management == "shopify" %}
                 {% if product.variants.first.inventory_quantity > 5 %}
@@ -86,9 +76,13 @@
                 </select>
                 <label for="quantity">Quantity: </label>
                 <input type="number" id="Quantity" value="1" name="quantity" value="1" min="1">
-                <button type="submit" name="add" id="add-to-cart-btn" class="form-btn" value="Add to cart">add to cart</button>
+                <!-- Change button's color depending on the availability of the product -->
+                <button type="submit" name="add" id="add-to-cart-btn"
+                class="form-btn {% if product.variants.first.inventory_quantity > 0 %}{{ 'instock' }}{% else product.variants.first.inventory_quantity == 0 %}{{ 'nostock' }}{% endif %}"
+                value="Add to cart">add to cart</button>
             </form>
         </div>
+
         <div>
             {{ product.description }}
         </div>
@@ -99,41 +93,39 @@
 function addItemToCart(event){
     event.preventDefault();
 
+    // Post item order without loading a cart page
     jQuery.ajax({
             type: 'POST',
             url: '/cart/add.js',
             data: $('#'+'add-to-cart-form').serialize(),
             dataType: 'json',
             success: function() {
-                openCartPopup();
+                openSuccessMessage();
             },
-    });
-}
+    })
+};
 
-function openCartPopup(e) {
-    const cartPopup = document.getElementById("new-cart-item");
-    cartPopup.style.display= "block";
-}
+function openSuccessMessage(e) {
+    // Show message "Just added to cart" on the product page
+    const successMessage = document.getElementById("success-message");
+    successMessage.style.display= "block";
+};
+
 function closeCartPopup() {
     const cartPopup = document.getElementById("new-cart-item");
     cartPopup.style.display = "none";
-}
+};
 
 window.addEventListener('DOMContentLoaded', (event) => {
     const span = document.getElementsByClassName("cart-popup-close")[0];
     const form = document.getElementById("add-to-cart-form");
-    const stock = "{{ product.variants.first.inventory_quantity }}";
     const addToCartButton = document.getElementById("add-to-cart-btn");
-    console.log(stock);
 
-    if(stock > 0) {
-        addToCartButton.classList.add("instock");
-    } else {
-        addToCartButton.classList.add("nostock");
-    }
+    // Check stock
+    const stock = "{{ product.variants.first.inventory_quantity }}";
+    console.log("Item stock : " + stock);
 
     form.addEventListener('submit', addItemToCart);
-    span.addEventListener('click', closeCartPopup);
+    span.addEventListener('click', closeCartPopup,);
 });
-
 </script> 

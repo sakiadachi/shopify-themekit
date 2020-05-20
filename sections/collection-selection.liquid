@@ -1,1 +1,25 @@
-{% include collection-selection %}
+<div class="select-collection">
+    <ul>
+        {% for collection in collections %}
+        <li class="row">{{ collection.title | link_to: collection.url}}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- Products ordered by title (b.ii.) -->
+<div class="row collection">
+    {% assign products = collection.products | sort: 'title' %}
+        {% paginate collection.products by 20 %}
+        {% for product in products %}
+            <div class="column collection">
+            <a href="{{ product.url | within: collection }}">
+                <img src="{{ product.featured_image.src | img_url: 'large' }}" alt="{{ product.featured_image.alt | escape }}">
+            </a>
+            <a href="{{ product.url | within: collection }}">{{ product.title }}</a>
+            {{ product.price | money }}
+            {% unless product.available %}<br><strong>sold out</strong>{% endunless %}
+            </div>
+        {% else %}
+            <p>no matches</p>
+        {% endfor %}
+</div>

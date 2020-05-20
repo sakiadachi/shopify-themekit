@@ -1,31 +1,11 @@
 <h1>{{ collection.title }}</h1>
-<div class="select-collection">
-    <ul>
-        {% for collection in collections %}
-        <li class="row">{{ collection.title | link_to: collection.url}}</li>
-        {% endfor %}
-    </ul>
-</div>
 
-<div class="row collection">
-        {% paginate collection.products by 20 %}
-        {% for product in collection.products %}
-            <div class="column collection">
-            <a href="{{ product.url | within: collection }}">
-                <img src="{{ product.featured_image.src | img_url: 'large' }}" alt="{{ product.featured_image.alt | escape }}">
-            </a>
-            <a href="{{ product.url | within: collection }}">{{ product.title }}</a>
-            {{ product.price | money }}
-            {% unless product.available %}<br><strong>sold out</strong>{% endunless %}
-            </div>
-        {% else %}
-            <p>no matches</p>
-        {% endfor %}
-    </div>
-        <div class="row">
-            {% if paginate.pages > 1 %}
-            {{ paginate | default_pagination }}
-        {% endif %}
-        {% endpaginate %}
-        </div>
+{% section 'collection-selection' %}
+
+<div class="row">
+    {% if paginate.pages > 1 %}
+    {{ paginate | default_pagination }}
+{% endif %}
+{% endpaginate %}
+</div>
 
